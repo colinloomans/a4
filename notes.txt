@@ -1,0 +1,11 @@
+Our hero starts out with 100 health and rubber chicken in his hand.
+Our villian is going to be a turtle that shoots ninja stars out of its mouth at random pixels within 50 pixels of the hero
+Ninja stars disappear once they hit a wall on the outside of the arena.
+Once the hero is hit be a ninja star, the hero loses 20 health.
+In the top right corner of the arena, there is going to be a lake.
+
+At this lake, there is going to be a tent that the turtle doesn't like. The tent is built by the hero in 3 stages.
+Once the tent is built, the hero has to move to the opposite end of the arena, bottom left, to signal an army of bunnies to kill the turtle.
+Once the army of bunnies is commanded, a war breaks out between the hero, bunnies, and turtle.
+The bunnies throw eggs to attack the turtle and the hero's rubber chicken transforms into a double sided, blue lightsaber that reflects the turtle's ninja stars.
+Once the turtle dies, the game ends and the hero and bunnies party.

@@ -1,6 +1,5 @@
 //////////////////////////  Villain class /////////////////////////////////
 
-
 function Villain(program, x, y, z, degrees, bounding_cir_rad)  {
     GameObject.call(this, program, x, y, z, degrees, bounding_cir_rad);
 

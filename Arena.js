@@ -103,10 +103,10 @@ function Arena () {
 	gl.drawArrays(gl.TRIANGLE_FAN, 8, 4);
 	gl.drawArrays(gl.TRIANGLE_FAN, 12, 4);
 
-	ambientProduct = mult(la0, blue);
+	ambientProduct = mult(la0, green);
 	//	ambientProduct = mult(vec4(1.0,1.0,1.0,1.0), blue);
-	diffuseProduct = mult(ld0, blue);
-	specularProduct = mult(ls0, blue);
+	diffuseProduct = mult(ld0, green);
+	specularProduct = mult(ls0, green);
 	
 	gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"),
 		      flatten(ambientProduct));

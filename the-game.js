@@ -47,21 +47,23 @@ var g_matrixStack = []; // Stack for storing a matrix
 window.onload = function init(){
     canvas = document.getElementById( "gl-canvas" );
     
-    //    gl = WebGLUtils.setupWebGL( canvas );
+    //gl = WebGLUtils.setupWebGL( canvas );
     gl = WebGLDebugUtils.makeDebugContext( canvas.getContext("webgl") ); // For debugging
     if ( !gl ) { alert( "WebGL isn't available" ); }
     
     //  Configure WebGL
     
-    gl.clearColor( 0.2, 0.2, 0.2, 1.0 );
+    gl.clearColor( 0.0, 0.86, 1.0, 1.0 );           // sky color
 
     //  Load shaders and initialize attribute buffers
 
     program = initShaders( gl, "vertex-shader", "fragment-shader" );
     gl.useProgram( program );
 
-    eyex  = ARENASIZE/2.0;	// Where the hero starts
-    eyez  =  -ARENASIZE/2.0;
+    eyex = 30;                  // Where the hero starts (0 -> 1000)
+    //eyex  = ARENASIZE/2.0;
+    eyez = -30;
+    //eyez  =  -ARENASIZE/2.0;                        // (0 -> -1000)
     aspect=width/height;
 
     modelViewMatrixLoc = gl.getUniformLocation( program, "modelViewMatrix" );
@@ -77,13 +79,16 @@ window.onload = function init(){
     arena = new Arena(program);
     arena.init();
 
-    hero = new Hero(program, eyex, 0.0, eyez, 45, 10.0);
+    //hero = new Hero(program, eyex, 0.0, eyez, 45, 10.0);
+    hero = new Hero(program, eyex, 0.0, eyez, 315, 10.0);
     hero.init();
 
-    thingSeeking = new ThingSeeking(program, ARENASIZE/4.0, 0.0, -ARENASIZE/4.0, 0, 10.0);
+    //thingSeeking = new ThingSeeking(program, ARENASIZE/4.0, 0.0, -ARENASIZE/4.0, 0, 10.0);
+    thingSeeking = new ThingSeeking(program, 970, 0.0, -970, 0, 10.0);
     thingSeeking.init();
 
-    villain = new Villain(program, (3*ARENASIZE)/4.0, 0.0, -ARENASIZE/4.0, 0, 10.0);
+    //villain = new Villain(program, (3*ARENASIZE)/4.0, 0.0, -ARENASIZE/4.0, 0, 10.0);
+    villain = new Villain(program, 500, 0.0, -500, 135, 10.0);
     villain.init();
     
     render();
@@ -95,7 +100,9 @@ function render()
 
     
     // Hero's eye viewport 
-    gl.viewport( vp1_left, vp1_bottom, (HERO_VP * width), height );
+    gl.viewport(vp1_left, vp1_bottom, (HERO_VP * width), height);
+
+    //villain.xdir = hero.xdir * -1;
     
     lp0[0] = hero.x + hero.xdir; // Light in front of hero, in line with hero's direction
     lp0[1] = EYEHEIGHT;
@@ -129,30 +136,57 @@ function render()
     requestAnimFrame( render );
 };
 
-// Key listener
+//y goes 0-70, x = 0-1000 wall is about 30, z = 0 - (-1000)
+ValidMove = function (movement) {
+    var x = hero.x + movement;
+    var z = hero.z + movement;
+    var isValidMove = true;
+    if (x < 30 || x > 970) {
+        isValidMove = false;
+    }
+    else if (z < -970 || z > 30) {
+        isValidMove = false;
+    }
+    return isValidMove;
+};
 
-window.onkeydown = function(event) {
+window.onkeydown = function (event) {
     var key = String.fromCharCode(event.keyCode);
     // For letters, the upper-case version of the letter is always
     // returned because the shift-key is regarded as a separate key in
     // itself.  Hence upper- and lower-case can't be distinguished.
     switch (key) {
-    case 'B':
-	// Move backward
-	hero.move(-1.0);
-	break;
-    case 'F':
-	// Move forward
-	hero.move(1.0);
-	break;
-    case 'L':
-	// Turn left 
-	hero.turn(1);
-	break;
-    case 'R':
-	// Turn right 
-	hero.turn(-1);
-	break;
+        case 'S':
+            // Move backward
+            if (ValidMove(-2)) {
+                hero.move(-2);
+                villain.move(-2);
+            }
+            else {
+                hero.move(2);
+                villain.move(-2);
+            }
+            break;
+        case 'W':
+            // Move forward
+            if (ValidMove(2)) {
+                hero.move(2);
+                villain.move(2);
+            }
+            else {
+                hero.move(-2);
+                villain.move(-2);
+            }
+            break;
+        case 'D':
+            // Turn left
+            hero.turn(2);
+            villain(-2);
+            break;
+        case 'A':
+            // Turn right
+            hero.turn(-2);
+            villain(2);
+            break;
     }
 };
-
