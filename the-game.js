@@ -141,52 +141,69 @@ ValidMove = function (movement) {
     var x = hero.x + movement;
     var z = hero.z + movement;
     var isValidMove = true;
-    if (x < 30 || x > 970) {
+    if (x < 25 || x > 975) {
         isValidMove = false;
     }
-    else if (z < -970 || z > 30) {
+    else if (z < -975 || z > -25) {
         isValidMove = false;
     }
+    ForceValidLocation();
     return isValidMove;
+};
+
+ForceValidLocation = function () {
+    while (hero.x < 25) {
+        hero.x = hero.x + 2;
+    }
+    while (hero.x > 975) {
+        hero.x = hero.x - 2;
+    }
+    while (hero.z < -975) {
+        hero.z = hero.z + 2;
+    }
+    while (hero.z > -25) {
+        hero.z = hero.z - 2;
+    }
 };
 
 window.onkeydown = function (event) {
     var key = String.fromCharCode(event.keyCode);
+    var movementSpeed = 3;
     // For letters, the upper-case version of the letter is always
     // returned because the shift-key is regarded as a separate key in
     // itself.  Hence upper- and lower-case can't be distinguished.
     switch (key) {
         case 'S':
-            // Move backward
-            if (ValidMove(-2)) {
-                hero.move(-2);
-                villain.move(-2);
+        // Move backward
+        if (ValidMove(-movementSpeed)) {
+                hero.move(-movementSpeed);
+                villain.move(-movementSpeed);
             }
             else {
-                hero.move(2);
-                villain.move(-2);
+                hero.move(movementSpeed);
+                villain.move(-movementSpeed);
             }
             break;
         case 'W':
             // Move forward
-            if (ValidMove(2)) {
-                hero.move(2);
-                villain.move(2);
+        if (ValidMove(movementSpeed)) {
+                hero.move(movementSpeed);
+                villain.move(movementSpeed);
             }
             else {
-                hero.move(-2);
-                villain.move(-2);
+                hero.move(-movementSpeed);
+                villain.move(-movementSpeed);
             }
             break;
         case 'D':
             // Turn left
-            hero.turn(2);
-            villain(-2);
+            hero.turn(movementSpeed);
+            villain(-movementSpeed);
             break;
         case 'A':
             // Turn right
-            hero.turn(-2);
-            villain(2);
+            hero.turn(-movementSpeed);
+            villain(movementSpeed);
             break;
     }
 };
