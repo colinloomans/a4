@@ -22,7 +22,13 @@ const vp1_bottom = 0;
 var la0  = [ 0.2,0.2,0.2, 1.0 ]; // light 0 ambient intensity 
 var ld0  = [ 1.0,1.0,1.0, 1.0 ]; // light 0 diffuse intensity 
 var ls0  = [ 1.0,1.0,1.0, 1.0 ]; // light 0 specular 
-var lp0  = [ 0.0,1.0,1.0, 1.0 ]; // light 0 position -- will adjust to hero's viewpoint 
+var lp0 = [0.0, 1.0, 1.0, 1.0]; // light 0 position -- will adjust to hero's viewpoint 
+
+var la1 = [0.2, 0.2, 0.2, 1.0]; // light 1 ambient intensity 
+var ld1 = [1.0, 1.0, 1.0, 1.0]; // light 1 diffuse intensity 
+var ls1 = [1.0, 1.0, 1.0, 1.0]; // light 1 specular 
+var lp1 = [0.0, 1.0, 1.0, 1.0]; // light 1 position -- will adjust to villain's location
+
 var ma   = [ 0.02 , 0.2  , 0.02 , 1.0 ]; // material ambient 
 var md   = [ 0.08, 0.6 , 0.08, 1.0 ]; // material diffuse 
 var ms   = [ 0.6  , 0.7, 0.6  , 1.0 ]; // material specular 
@@ -41,6 +47,10 @@ var arena;
 var hero;
 var thingSeeking;
 var villain;
+var villain2;
+
+var heroScore = 0;
+var villainScore = 0;
 
 var g_matrixStack = []; // Stack for storing a matrix
 
@@ -53,7 +63,7 @@ window.onload = function init(){
     
     //  Configure WebGL
     
-    gl.clearColor( 0.0, 0.86, 1.0, 1.0 );           // sky color
+    gl.clearColor(0.0, 0.86, 1.0, 1.0);           // sky color
 
     //  Load shaders and initialize attribute buffers
 
@@ -73,23 +83,26 @@ window.onload = function init(){
 		 0); // Assume no texturing is the default used in
                      // shader.  If your game object uses it, be sure
                      // to switch it back to 0 for consistency with
-                     // those objects that use the defalt.
+                     // those objects that use the default.
     
     
     arena = new Arena(program);
     arena.init();
 
     //hero = new Hero(program, eyex, 0.0, eyez, 45, 10.0);
-    hero = new Hero(program, eyex, 0.0, eyez, 315, 10.0);
+    hero = new Hero(program, 500, 0.0, -970, 90, 10.0);
     hero.init();
 
     //thingSeeking = new ThingSeeking(program, ARENASIZE/4.0, 0.0, -ARENASIZE/4.0, 0, 10.0);
-    thingSeeking = new ThingSeeking(program, 970, 0.0, -970, 0, 10.0);
+    thingSeeking = new ThingSeeking(program, 500, 0.0, -500, 0, 10.0);
     thingSeeking.init();
 
     //villain = new Villain(program, (3*ARENASIZE)/4.0, 0.0, -ARENASIZE/4.0, 0, 10.0);
-    villain = new Villain(program, 500, 0.0, -500, 135, 10.0);
+    villain = new Villain(program, 30, 0.0, -30, 270, 10.0);
     villain.init();
+
+    //villian2 = new Villain(program, 970, 0.0, -30, 135, 10.0);
+    //villain2.init();
     
     render();
 };
@@ -98,11 +111,13 @@ function render()
 {
     gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    
     // Hero's eye viewport 
     gl.viewport(vp1_left, vp1_bottom, (HERO_VP * width), height);
 
-    //villain.xdir = hero.xdir * -1;
+    // Light above the villain
+    lp1[0] = villain.x;
+    lp1[1] = 50;
+    lp1[2] = villain.z;
     
     lp0[0] = hero.x + hero.xdir; // Light in front of hero, in line with hero's direction
     lp0[1] = EYEHEIGHT;
@@ -117,6 +132,7 @@ function render()
     hero.show();
     thingSeeking.show();
     villain.show();
+    //villain2.show();
     
     // Overhead viewport 
     var horiz_offset = (width * (1.0 - HERO_VP) / 20.0);
@@ -132,9 +148,20 @@ function render()
     hero.show();
     thingSeeking.show();
     villain.show();
+    //villain2.show();
 
     requestAnimFrame( render );
 };
+
+/*Score = function() {
+    if (hero.xyz == ThingSeeking.xyz) {
+        heroScore++;
+        document.getElementById('score').innerHTML = "SCORE: HERO = " + heroScore + " VILLAIN = " + villainScore;
+    } else if (villain.xyz == ThingSeeking.xyz) {
+        villainScore++;
+        document.getElementById('score').innerHTML = "SCORE: HERO = " + heroScore + " VILLAIN = " + villainScore;
+    }
+}*/
 
 //y goes 0-70, x = 0-1000 wall is about 30, z = 0 - (-1000)
 ValidMove = function (movement) {
@@ -177,33 +204,27 @@ window.onkeydown = function (event) {
         // Move backward
         if (ValidMove(-movementSpeed)) {
                 hero.move(-movementSpeed);
-                villain.move(-movementSpeed);
             }
             else {
                 hero.move(movementSpeed);
-                villain.move(-movementSpeed);
             }
             break;
         case 'W':
             // Move forward
         if (ValidMove(movementSpeed)) {
                 hero.move(movementSpeed);
-                villain.move(movementSpeed);
             }
             else {
                 hero.move(-movementSpeed);
-                villain.move(-movementSpeed);
             }
             break;
         case 'D':
             // Turn left
             hero.turn(movementSpeed);
-            villain(-movementSpeed);
             break;
         case 'A':
             // Turn right
             hero.turn(-movementSpeed);
-            villain(movementSpeed);
             break;
     }
 };
