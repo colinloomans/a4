@@ -46,6 +46,7 @@ var program;
 var arena;
 var hero;
 var thingSeeking;
+var torusObjectArray = [];
 var villain;
 var villain2;
 
@@ -97,6 +98,16 @@ window.onload = function init(){
     thingSeeking = new ThingSeeking(program, 500, 0.0, -500, 0, 10.0);
     thingSeeking.init();
 
+    //TorusObjects
+
+    for (var i = 200; i < 1000; i= i + 200) {
+        for (var j = -200; j > -1000; j = j - 200) {
+            var temp = new TorusObject(program, i, 5, j, 0, 10.0);
+            temp.init();
+            torusObjectArray.push(temp);
+        }
+    }
+
     //villain = new Villain(program, (3*ARENASIZE)/4.0, 0.0, -ARENASIZE/4.0, 0, 10.0);
     villain = new Villain(program, 30, 0.0, -30, 270, 10.0);
     villain.init();
@@ -131,6 +142,9 @@ function render()
     arena.show();
     hero.show();
     thingSeeking.show();
+    for (var i = 0; i < torusObjectArray.length; i++) {
+        torusObjectArray[i].show();
+    }
     villain.show();
     //villain2.show();
     
@@ -147,6 +161,9 @@ function render()
     arena.show();
     hero.show();
     thingSeeking.show();
+    for (var i = 0; i < torusObjectArray.length; i++) {
+        torusObjectArray[i].show();
+    }
     villain.show();
     //villain2.show();
 
