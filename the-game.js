@@ -169,38 +169,46 @@ function render()
     requestAnimFrame( render );
 };
 
-/*Score = function() {
-    if (hero.xyz == TorusObject.xyz) { //needs to be implemented for multiple torus'
-        heroStashScore++;
-        RemoveTorus(TorusObject.xyz);
-    } else if (villain.xyz == TorusObject.xyz) { //needs to be implemented for multiple torus'
-        villainStashScore++;
-        RemoveTorus(TorusObject.xyz);
-    } else if(hero.xyz == BankObject.xyz) {
-        heroBankScore = heroStashScore;
-        heroStashScore = 0;
-        document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainBankScore;
-        if (heroBankScore >= 10){
-            document.getElementById('score').innerHTML = "THE HERO WINS!";
-        }
-    } else if(villain.xyz == BankObject.xyz) {
-        villainBankScore = villainStashScore;
-        villainStashScore = 0;
-        document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainBankScore;
-        if (villainBankScore >= 10){
-            document.getElementById('score').innerHTML = "THE VILLAIN WINS!";
-        }
-    } else if(hero.xyz == villain.xyz || villain.xyz == hero.xyz) {
-        heroStashScore = 0;
-        villainStashScore = 0;
+/*if (hero.xyz == TorusObject.xyz) { //needs to be implemented for multiple torus'
+    heroStashScore++;
+    RemoveTorus(TorusObject.xyz);
+} else if (villain.xyz == TorusObject.xyz) { //needs to be implemented for multiple torus'
+    villainStashScore++;
+    RemoveTorus(TorusObject.xyz);
+} else if (hero.xyz == BankObject.xyz) {
+    heroBankScore = heroStashScore;
+    heroStashScore = 0;
+    document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainBankScore;
+    if (heroBankScore >= 8) {
+        document.getElementById('score').innerHTML = "THE HERO WINS!";
     }
+} else if (villain.xyz == BankObject.xyz) {
+    villainBankScore = villainStashScore;
+    villainStashScore = 0;
+    document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainBankScore;
+    if (villainBankScore >= 8) {
+        document.getElementById('score').innerHTML = "THE VILLAIN WINS!";
+    }
+} else if (hero.xyz == villain.xyz || villain.xyz == hero.xyz) {
+    heroStashScore = 0;
+    villainStashScore = 0;
 }
 
 RemoveTorus = function (position) { // needs to be implemented to remove a torus once picked up
 
 }
 
-BoxMap = function(TorusObject) { // needs to be implemented to box map all torus' and the BankObject
+Seek = function () { // needs to be implemented for the villain to actively do something
+    // get nearest torus position and move to it
+    if(villainStashScore >= 2) {
+        // move to the BankObject
+    }
+    if(villainStashScore + villainBankScore >= 8) {
+        // move to the BankObject
+    }
+}
+
+BoxMap = function(Object) { // needs to be implemented to box map all torus' and the BankObject
 
 }*/
 
