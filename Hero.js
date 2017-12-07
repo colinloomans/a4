@@ -59,9 +59,9 @@ Hero.prototype.show = function() {
     gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.iBuffer );
 
     //    var ambientProduct = mult(vec4(1.0,1.0,1.0,1.0), red);
-    var ambientProduct = mult(la0, yellow);
-    var diffuseProduct = mult(ld0, yellow);
-    var specularProduct = mult(ls0, yellow);
+    var ambientProduct = mult(la0, lightBlue);
+    var diffuseProduct = mult(ld0, lightBlue);
+    var specularProduct = mult(ls0, lightBlue);
     
     gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"),
 		  flatten(ambientProduct));

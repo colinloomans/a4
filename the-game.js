@@ -34,7 +34,8 @@ var md   = [ 0.08, 0.6 , 0.08, 1.0 ]; // material diffuse
 var ms   = [ 0.6  , 0.7, 0.6  , 1.0 ]; // material specular 
 var me      = 75;             // shininess exponent 
 const red  = [ 1.0,0.0,0.0, 1.0 ]; // pure red 
-const blue = [ 0.0,0.0,1.0, 1.0 ]; // pure blue 
+const blue = [0.0, 0.0, 1.0, 1.0]; // pure blue 
+const lightBlue = [0.0, 0.8, 1.0]; // sky blue
 const green = [ 0.0,1.0,0.0, 1.0 ]; // pure blue 
 const yellow = [ 1.0,1.0,0.0, 1.0 ]; // pure yellow
 
@@ -50,8 +51,10 @@ var torusObjectArray = [];
 var villain;
 var villain2;
 
-var heroScore = 0;
-var villainScore = 0;
+var heroStashScore = 0;
+var heroBankScore = 0;
+var villainStashScore = 0;
+var villainBankScore = 0;
 
 var g_matrixStack = []; // Stack for storing a matrix
 
@@ -102,18 +105,16 @@ window.onload = function init(){
 
     for (var i = 200; i < 1000; i= i + 200) {
         for (var j = -200; j > -1000; j = j - 200) {
-            var temp = new TorusObject(program, i, 5, j, 0, 10.0);
+            var temp = new TorusObject(program, i, 5, j, 90, 10.0);
+            //BoxMap(temp);
             temp.init();
             torusObjectArray.push(temp);
         }
     }
 
     //villain = new Villain(program, (3*ARENASIZE)/4.0, 0.0, -ARENASIZE/4.0, 0, 10.0);
-    villain = new Villain(program, 30, 0.0, -30, 270, 10.0);
+    villain = new Villain(program, 500, 0.0, -30, 270, 10.0);
     villain.init();
-
-    //villian2 = new Villain(program, 970, 0.0, -30, 135, 10.0);
-    //villain2.init();
     
     render();
 };
@@ -146,7 +147,6 @@ function render()
         torusObjectArray[i].show();
     }
     villain.show();
-    //villain2.show();
     
     // Overhead viewport 
     var horiz_offset = (width * (1.0 - HERO_VP) / 20.0);
@@ -165,19 +165,43 @@ function render()
         torusObjectArray[i].show();
     }
     villain.show();
-    //villain2.show();
 
     requestAnimFrame( render );
 };
 
 /*Score = function() {
-    if (hero.xyz == ThingSeeking.xyz) {
-        heroScore++;
-        document.getElementById('score').innerHTML = "SCORE: HERO = " + heroScore + " VILLAIN = " + villainScore;
-    } else if (villain.xyz == ThingSeeking.xyz) {
-        villainScore++;
-        document.getElementById('score').innerHTML = "SCORE: HERO = " + heroScore + " VILLAIN = " + villainScore;
+    if (hero.xyz == TorusObject.xyz) { //needs to be implemented for multiple torus'
+        heroStashScore++;
+        RemoveTorus(TorusObject.xyz);
+    } else if (villain.xyz == TorusObject.xyz) { //needs to be implemented for multiple torus'
+        villainStashScore++;
+        RemoveTorus(TorusObject.xyz);
+    } else if(hero.xyz == BankObject.xyz) {
+        heroBankScore = heroStashScore;
+        heroStashScore = 0;
+        document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainBankScore;
+        if (heroBankScore >= 10){
+            document.getElementById('score').innerHTML = "THE HERO WINS!";
+        }
+    } else if(villain.xyz == BankObject.xyz) {
+        villainBankScore = villainStashScore;
+        villainStashScore = 0;
+        document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainBankScore;
+        if (villainBankScore >= 10){
+            document.getElementById('score').innerHTML = "THE VILLAIN WINS!";
+        }
+    } else if(hero.xyz == villain.xyz || villain.xyz == hero.xyz) {
+        heroStashScore = 0;
+        villainStashScore = 0;
     }
+}
+
+RemoveTorus = function (position) { // needs to be implemented to remove a torus once picked up
+
+}
+
+BoxMap = function(TorusObject) { // needs to be implemented to box map all torus' and the BankObject
+
 }*/
 
 //y goes 0-70, x = 0-1000 wall is about 30, z = 0 - (-1000)
