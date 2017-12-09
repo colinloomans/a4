@@ -55,6 +55,7 @@ var torusObjectArray = [];
 var BankObject1;
 var BankObject2;
 var villain;
+var villain
 
 var heroStashScore = 0;
 var heroBankScore = 0;
@@ -160,11 +161,8 @@ function render() {
 
     // Overhead viewport 
     var horiz_offset = (width * (1.0 - HERO_VP) / 20.0);
-    gl.viewport(vp1_left + (HERO_VP * width) + horiz_offset,
-        vp1_bottom, 18 * horiz_offset, height);
-    modelViewMatrix = lookAt(vec3(500.0, 100.0, -500.0),
-        vec3(500.0, 0.0, -500.0),
-        vec3(0.0, 0.0, -1.0));
+    gl.viewport(vp1_left + (HERO_VP * width) + horiz_offset, vp1_bottom, 18 * horiz_offset, height);
+    modelViewMatrix = lookAt(vec3(500.0, 100.0, -500.0), vec3(500.0, 0.0, -500.0), vec3(0.0, 0.0, -1.0));
     projectionMatrix = ortho(-500, 500, -500, 500, 0, 200);
     gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
     gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
@@ -179,7 +177,7 @@ function render() {
     BankObject2.show();
 
     checkForScore();
-
+    Seek();
     requestAnimFrame(render);
 };
 
@@ -187,33 +185,55 @@ checkForScore = function () {
     for (var i = 0; i < torusObjectArray.length; i++) {
         if (Math.abs(hero.x - torusObjectArray[i].x) < 20 && Math.abs(hero.z - torusObjectArray[i].z) < 20) {
             heroStashScore++;
-            torusObjectArray[i].scaleVar = 0;
+            document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainScore;
+            torusObjectArray.splice(i, 1);
+        }
+    }
+
+    if ((Math.abs(hero.x - BankObject1.x) < 10 && Math.abs(hero.z - BankObject1.z) < 10) || (Math.abs(hero.x - BankObject2.x) < 10 && Math.abs(hero.z - BankObject2.z) < 10)) {
+        if (heroBankScore >= 10) {
+            document.getElementById('score').innerHTML = "THE HERO WINS!";
+        }
+        else {
+            heroBankScore = heroStashScore + heroBankScore;
+            heroStashScore = 0;
             document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainScore;
         }
     }
 };
 
-/*
-if (hero.xyz == BankObject.xyz) {
-    heroBankScore = heroStashScore;
-    heroStashScore = 0;
-    document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainBankScore;
-    if (heroBankScore >= 10) {
-        document.getElementById('score').innerHTML = "THE HERO WINS!";
-    }
-} else if (villain.xyz == hero.xyz) {
-    villainScore = heroStashScore;
-    heroStashScore = 0;
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 Seek = function () { // needs to be implemented for the villain to actively do something
+    var movementSpeed = 2;
+    if (Math.abs(hero.x - villain.x) < 34 && Math.abs(hero.z - villain.z) < 34) {
+        if (villainScore >= 7) {
+            document.getElementById('score').innerHTML = "THE Villian wins wa wa waaaaaa!";
+        }
+        else {
+            villainScore = heroStashScore + villainScore;
+            heroStashScore = 0;
+            document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainScore;
+        }
+    }
+    else {
+        if (hero.x > villain.x) {
+            villain.x = villain.x + movementSpeed;
+        }
+        else {
+            villain.x = villain.x - movementSpeed;
+        }
+        if (hero.z > villain.z) {
+            villain.z = villain.z + movementSpeed;
+        }
+        else {
+            villain.z = villain.z - movementSpeed;
+        }
+    }
     
 }
-
-BoxMap = function(Object) { // needs to be implemented to box map all torus' and the BankObject
-
-}
-*/
 
 //y goes 0-70, x = 0-1000 wall is about 30, z = 0 - (-1000)
 ValidMove = function (movement) {
@@ -226,6 +246,10 @@ ValidMove = function (movement) {
     else if (z < -975 || z > -25) {
         isValidMove = false;
     }
+    if (Math.abs(x - villain.x) < 34 && Math.abs(z - villain.z) < 34) {
+        isValidMove = false;
+    }
+
     ForceValidLocation();
     return isValidMove;
 };
@@ -243,40 +267,51 @@ ForceValidLocation = function () {
     while (hero.z > -25) {
         hero.z = hero.z - 2;
     }
+    while (Math.abs(hero.x - villain.x) < 32 && Math.abs(hero.z - villain.z) < 32) {
+        if (hero.x < villain.x) {
+            hero.x = hero.x - 1;
+        }
+        else {
+            hero.x = hero.x + 1;
+        }
+        if (hero.z < villain.z) {
+            hero.z = hero.z - 1;
+        }
+        else {
+            hero.z = hero.z + 1;
+        }
+    }
 };
 
-window.onkeydown = function (event) {
-    var key = String.fromCharCode(event.keyCode);
-    var movementSpeed = 3;
-    // For letters, the upper-case version of the letter is always
-    // returned because the shift-key is regarded as a separate key in
-    // itself.  Hence upper- and lower-case can't be distinguished.
-    switch (key) {
-        case 'S':
-            // Move backward
-            if (ValidMove(-movementSpeed)) {
-                hero.move(-movementSpeed);
-            }
-            else {
-                hero.move(movementSpeed);
-            }
-            break;
-        case 'W':
-            // Move forward
-            if (ValidMove(movementSpeed)) {
-                hero.move(movementSpeed);
-            }
-            else {
-                hero.move(-movementSpeed);
-            }
-            break;
-        case 'D':
-            // Turn left
-            hero.turn(movementSpeed);
-            break;
-        case 'A':
-            // Turn right
-            hero.turn(-movementSpeed);
-            break;
+    var keyMap = [];
+    document.addEventListener("keydown", onDocumentKeyDown, true);
+    document.addEventListener("keyup", onDocumentKeyUp, true);
+
+    function onDocumentKeyDown(event) {
+        var keyCode = event.keyCode;
+        keyMap[keyCode] = true;
+        executeMovement();
     }
+    function onDocumentKeyUp(event) {
+        var keyCode = event.keyCode;
+        keyMap[keyCode] = false;
+        executeMovement();
+    }
+    function executeMovement() {
+        if (keyMap[37] == true) {
+            //rotate left
+            hero.turn(-3);
+        }
+        if (keyMap[39] == true) {
+            //rotate right
+            hero.turn(3);
+        }
+        if (keyMap[38] == true) {
+            //move front
+            hero.move(4.0);
+        }
+        if (keyMap[40] == true) {
+            //move back
+            hero.move(-3.0);
+        }
 };
