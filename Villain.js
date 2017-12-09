@@ -113,8 +113,6 @@ Villain.prototype.init = function() {
 			  gl.NEAREST_MIPMAP_LINEAR );
 	gl.texParameteri( gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST );
     };
-    
-    
 };
 
 Villain.prototype.show = function() {
@@ -150,6 +148,22 @@ Villain.prototype.show = function() {
     gl.enableVertexAttribArray(this.vTexCoord);
 
     gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.iBuffer );
+
+    //    var ambientProduct = mult(vec4(1.0,1.0,1.0,1.0), red);
+    var ambientProduct = mult(la1, lightBlue);
+    var diffuseProduct = mult(ld1, lightBlue);
+    var specularProduct = mult(ls1, lightBlue);
+
+    gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"),
+        flatten(ambientProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "diffuseProduct"),
+        flatten(diffuseProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "specularProduct"),
+        flatten(specularProduct));
+    gl.uniform4fv(gl.getUniformLocation(program, "lightPosition"),
+        flatten(lp1));
+    gl.uniform1f(gl.getUniformLocation(program, "shininess"),
+        me);
 
     gl.enable(gl.CULL_FACE);	
     gl.cullFace(gl.BACK);
