@@ -150,7 +150,6 @@ Villain.prototype.show = function() {
 
     gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.iBuffer );
 
-    //    var ambientProduct = mult(vec4(1.0,1.0,1.0,1.0), red);
     var ambientProduct = mult(la1, red);
     var diffuseProduct = mult(ld1, red);
     var specularProduct = mult(ls1, red);
