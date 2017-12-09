@@ -109,13 +109,13 @@ function Arena () {
 	    gl.vertexAttribPointer( this.vNormal, 3, gl.FLOAT, false, 0, 0 );
 	    gl.enableVertexAttribArray( this.vNormal );
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.tBuffer);
+        /*gl.bindBuffer(gl.ARRAY_BUFFER, this.tBuffer);
         this.vTexCoord = gl.getAttribLocation(program, "vTexCoord");
         if (this.vTexCoord < 0) {
             console.log('Failed to get the storage location of vTexCoord');
         }
         gl.vertexAttribPointer(this.vTexCoord, 2, gl.FLOAT, false, 0, 0);
-        gl.enableVertexAttribArray(this.vTexCoord);
+        gl.enableVertexAttribArray(this.vTexCoord);*/
 
 	    var ambientProduct = mult(la0, ma);
 	    var diffuseProduct = mult(ld0, md);
@@ -153,7 +153,7 @@ function Arena () {
 	    // a different object can be activated.  
 	    gl.disableVertexAttribArray(this.vPosition);
         gl.disableVertexAttribArray(this.vNormal);
-        gl.disableVertexAttribArray(this.vTexCoord);
+        //gl.disableVertexAttribArray(this.vTexCoord);
     };
 
 };

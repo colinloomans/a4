@@ -1,12 +1,12 @@
 // the-game.js
 var gl;
-var canvas; 
-const WALLHEIGHT     = 70.0; // Some playing field parameters
-const ARENASIZE      = 1000.0;
-const EYEHEIGHT      = 15.0;
-const HERO_VP        = 0.625;
+var canvas;
+const WALLHEIGHT = 70.0; // Some playing field parameters
+const ARENASIZE = 1000.0;
+const EYEHEIGHT = 15.0;
+const HERO_VP = 0.625;
 
-const  upx=0.0, upy=1.0, upz=0.0;    // Some LookAt params 
+const upx = 0.0, upy = 1.0, upz = 0.0;    // Some LookAt params 
 
 const fov = 60.0;     // Perspective view params 
 const near = 1.0;
@@ -19,9 +19,9 @@ const vp1_left = 0;      // Left viewport -- the hero's view
 const vp1_bottom = 0;
 
 // Lighting stuff
-var la0  = [ 0.2,0.2,0.2, 1.0 ]; // light 0 ambient intensity 
-var ld0  = [ 1.0,1.0,1.0, 1.0 ]; // light 0 diffuse intensity 
-var ls0  = [ 1.0,1.0,1.0, 1.0 ]; // light 0 specular 
+var la0 = [0.2, 0.2, 0.2, 1.0]; // light 0 ambient intensity 
+var ld0 = [1.0, 1.0, 1.0, 1.0]; // light 0 diffuse intensity 
+var ls0 = [1.0, 1.0, 1.0, 1.0]; // light 0 specular 
 var lp0 = [0.0, 1.0, 1.0, 1.0]; // light 0 position -- will adjust to hero's viewpoint 
 
 var la1 = [0.2, 0.2, 0.2, 1.0]; // light 1 ambient intensity 
@@ -29,15 +29,17 @@ var ld1 = [1.0, 1.0, 1.0, 1.0]; // light 1 diffuse intensity
 var ls1 = [1.0, 1.0, 1.0, 1.0]; // light 1 specular 
 var lp1 = [0.0, 1.0, 1.0, 1.0]; // light 1 position -- will adjust to villain's location
 
-var ma   = [ 0.02 , 0.2  , 0.02 , 1.0 ]; // material ambient 
-var md   = [ 0.08, 0.6 , 0.08, 1.0 ]; // material diffuse 
-var ms   = [ 0.6  , 0.7, 0.6  , 1.0 ]; // material specular 
-var me      = 75;             // shininess exponent 
-const red  = [ 1.0,0.0,0.0, 1.0 ]; // pure red 
+var ma = [0.02, 0.2, 0.02, 1.0]; // material ambient 
+var md = [0.08, 0.6, 0.08, 1.0]; // material diffuse 
+var ms = [0.6, 0.7, 0.6, 1.0]; // material specular 
+var me = 75;             // shininess exponent 
+
+const red = [1.0, 0.0, 0.0, 1.0]; // pure red 
 const blue = [0.0, 0.0, 1.0, 1.0]; // pure blue 
-const lightBlue = [0.0, 0.8, 1.0]; // sky blue
-const green = [ 0.0,1.0,0.0, 1.0 ]; // pure blue 
-const yellow = [ 1.0,1.0,0.0, 1.0 ]; // pure yellow
+const lightBlue = [0.0, 0.8, 1.0, 1.0]; // sky blue
+const green = [0.0, 1.0, 0.0, 1.0]; // pure blue 
+const yellow = [1.0, 1.0, 0.0, 1.0]; // pure yellow
+const black = [0.0, 0.0, 0.0, 1.0]; // pure black
 
 var modelViewMatrix, projectionMatrix;
 var modelViewMatrixLoc, projectionMatrixLoc;
@@ -48,8 +50,8 @@ var arena;
 var hero;
 var thingSeeking;
 var torusObjectArray = [];
-var bankObject1;
-var bankObject2;
+var BankObject1;
+var BankObject2;
 var villain;
 var villain2;
 
@@ -60,38 +62,38 @@ var villainBankScore = 0;
 
 var g_matrixStack = []; // Stack for storing a matrix
 
-window.onload = function init(){
-    canvas = document.getElementById( "gl-canvas" );
-    
+window.onload = function init() {
+    canvas = document.getElementById("gl-canvas");
+
     //gl = WebGLUtils.setupWebGL( canvas );
-    gl = WebGLDebugUtils.makeDebugContext( canvas.getContext("webgl") ); // For debugging
-    if ( !gl ) { alert( "WebGL isn't available" ); }
-    
+    gl = WebGLDebugUtils.makeDebugContext(canvas.getContext("webgl")); // For debugging
+    if (!gl) { alert("WebGL isn't available"); }
+
     //  Configure WebGL
-    
+
     gl.clearColor(0.0, 0.86, 1.0, 1.0);           // sky color
 
     //  Load shaders and initialize attribute buffers
 
-    program = initShaders( gl, "vertex-shader", "fragment-shader" );
-    gl.useProgram( program );
+    program = initShaders(gl, "vertex-shader", "fragment-shader");
+    gl.useProgram(program);
 
     eyex = 30;                  // Where the hero starts (0 -> 1000)
     //eyex  = ARENASIZE/2.0;
     eyez = -30;
     //eyez  =  -ARENASIZE/2.0;                        // (0 -> -1000)
-    aspect=width/height;
+    aspect = width / height;
 
-    modelViewMatrixLoc = gl.getUniformLocation( program, "modelViewMatrix" );
-    projectionMatrixLoc = gl.getUniformLocation( program, "projectionMatrix" );
+    modelViewMatrixLoc = gl.getUniformLocation(program, "modelViewMatrix");
+    projectionMatrixLoc = gl.getUniformLocation(program, "projectionMatrix");
 
     gl.uniform1i(gl.getUniformLocation(program, "texture_flag"),
-		 0); // Assume no texturing is the default used in
-                     // shader.  If your game object uses it, be sure
-                     // to switch it back to 0 for consistency with
-                     // those objects that use the default.
-    
-    
+        0); // Assume no texturing is the default used in
+    // shader.  If your game object uses it, be sure
+    // to switch it back to 0 for consistency with
+    // those objects that use the default.
+
+
     arena = new Arena(program);
     arena.init();
 
@@ -103,16 +105,8 @@ window.onload = function init(){
     thingSeeking = new ThingSeeking(program, 500, 0.0, -500, 0, 10.0);
     thingSeeking.init();
 
-    //bank objects
-    bankObject1 = new BankObject(program, 500, 0, 0, 10.0);
-    bankObject1.init();
-
-    bankObject2 = new BankObject(program, 0, 0, -500, 0, 10.0);
-    bankObject2.init();
-
     //TorusObjects
-
-    for (var i = 200; i < 1000; i= i + 200) {
+    for (var i = 200; i < 1000; i = i + 200) {
         for (var j = -200; j > -1000; j = j - 200) {
             var temp = new TorusObject(program, i, 5, j, 90, 10.0);
             //BoxMap(temp);
@@ -121,94 +115,93 @@ window.onload = function init(){
         }
     }
 
+    //BankObjects
+    BankObject1 = new BankObject(program, 500, 0.0, -500, 0, 10.0);
+    BankObject1.init();
+
+    BankObject2 = new BankObject(program, 500, 0.0, -500, 0, 10.0);
+    BankObject2.init();
+
     //villain = new Villain(program, (3*ARENASIZE)/4.0, 0.0, -ARENASIZE/4.0, 0, 10.0);
     villain = new Villain(program, 500, 0.0, -30, 270, 10.0);
     villain.init();
-    
+
     render();
 };
 
-function render()
-{
-    gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+function render() {
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
     // Hero's eye viewport 
     gl.viewport(vp1_left, vp1_bottom, (HERO_VP * width), height);
 
-    // Light above the villain
-    lp1[0] = villain.x;
-    lp1[1] = 50;
-    lp1[2] = villain.z;
-    
+    lp1[0] = villain.x + villain.xdir; // Light in front of the villain, in line with villain's direction
+    lp1[1] = EYEHEIGHT;
+    lp1[2] = villain.z + villain.zdir;
+
     lp0[0] = hero.x + hero.xdir; // Light in front of hero, in line with hero's direction
     lp0[1] = EYEHEIGHT;
     lp0[2] = hero.z + hero.zdir;
-    modelViewMatrix = lookAt( vec3(hero.x, EYEHEIGHT, hero.z),
-			      vec3(hero.x + hero.xdir, EYEHEIGHT, hero.z + hero.zdir),
-			      vec3(upx, upy, upz) );
-    projectionMatrix = perspective( fov, HERO_VP * aspect, near, far );
-    gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
-    gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(projectionMatrix) );
+    modelViewMatrix = lookAt(vec3(hero.x, EYEHEIGHT, hero.z),
+        vec3(hero.x + hero.xdir, EYEHEIGHT, hero.z + hero.zdir),
+        vec3(upx, upy, upz));
+    projectionMatrix = perspective(fov, HERO_VP * aspect, near, far);
+    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+    gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
     arena.show();
     hero.show();
-    thingSeeking.show();
-    bankObject1.show();
-    bankObject2.show();
+    villain.show();
+    //thingSeeking.show();
     for (var i = 0; i < torusObjectArray.length; i++) {
         torusObjectArray[i].show();
     }
-    villain.show();
-    
+    BankObject1.show();
+    BankObject2.show();
+
     // Overhead viewport 
     var horiz_offset = (width * (1.0 - HERO_VP) / 20.0);
-    gl.viewport( vp1_left + (HERO_VP * width) + horiz_offset ,
-		 vp1_bottom, 18 * horiz_offset, height );
-    modelViewMatrix = lookAt(  vec3(500.0,100.0,-500.0),
-			       vec3(500.0,0.0,-500.0),
-			       vec3(0.0,0.0,-1.0) );
-    projectionMatrix = ortho( -500,500, -500,500, 0,200 );
-    gl.uniformMatrix4fv( modelViewMatrixLoc, false, flatten(modelViewMatrix) );
-    gl.uniformMatrix4fv( projectionMatrixLoc, false, flatten(projectionMatrix) );
+    gl.viewport(vp1_left + (HERO_VP * width) + horiz_offset,
+        vp1_bottom, 18 * horiz_offset, height);
+    modelViewMatrix = lookAt(vec3(500.0, 100.0, -500.0),
+        vec3(500.0, 0.0, -500.0),
+        vec3(0.0, 0.0, -1.0));
+    projectionMatrix = ortho(-500, 500, -500, 500, 0, 200);
+    gl.uniformMatrix4fv(modelViewMatrixLoc, false, flatten(modelViewMatrix));
+    gl.uniformMatrix4fv(projectionMatrixLoc, false, flatten(projectionMatrix));
     arena.show();
     hero.show();
-    thingSeeking.show();
+    villain.show();
+    //thingSeeking.show();
     for (var i = 0; i < torusObjectArray.length; i++) {
         torusObjectArray[i].show();
     }
-    villain.show();
-    bankObject1.show();
-    bankObject2.show();
+    BankObject1.show();
+    BankObject2.show();
 
-    requestAnimFrame( render );
+    requestAnimFrame(render);
 };
 
-/*if (hero.xyz == TorusObject.xyz) { //needs to be implemented for multiple torus'
-    heroStashScore++;
-    RemoveTorus(TorusObject.xyz);
-} else if (villain.xyz == TorusObject.xyz) { //needs to be implemented for multiple torus'
-    villainStashScore++;
-    RemoveTorus(TorusObject.xyz);
-} else if (hero.xyz == BankObject.xyz) {
+
+/*
+for (var i = 0; i < TorusObjectArray.length; i++) {
+    if (hero.xyz == TorusObjectArray[i].xyz) {
+        heroStashScore++;
+        RemoveTorus(TorusObject.xyz);
+    }
+}
+if (hero.xyz == BankObject.xyz) {
     heroBankScore = heroStashScore;
     heroStashScore = 0;
     document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainBankScore;
     if (heroBankScore >= 8) {
         document.getElementById('score').innerHTML = "THE HERO WINS!";
     }
-} else if (villain.xyz == BankObject.xyz) {
-    villainBankScore = villainStashScore;
-    villainStashScore = 0;
-    document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainBankScore;
-    if (villainBankScore >= 8) {
-        document.getElementById('score').innerHTML = "THE VILLAIN WINS!";
-    }
-} else if (hero.xyz == villain.xyz || villain.xyz == hero.xyz) {
+} else if (villain.xyz == hero.xyz) {
     heroStashScore = 0;
-    villainStashScore = 0;
 }
 
 RemoveTorus = function (position) { // needs to be implemented to remove a torus once picked up
-
+    position
 }
 
 Seek = function () { // needs to be implemented for the villain to actively do something
@@ -223,7 +216,8 @@ Seek = function () { // needs to be implemented for the villain to actively do s
 
 BoxMap = function(Object) { // needs to be implemented to box map all torus' and the BankObject
 
-}*/
+}
+*/
 
 //y goes 0-70, x = 0-1000 wall is about 30, z = 0 - (-1000)
 ValidMove = function (movement) {
@@ -263,8 +257,8 @@ window.onkeydown = function (event) {
     // itself.  Hence upper- and lower-case can't be distinguished.
     switch (key) {
         case 'S':
-        // Move backward
-        if (ValidMove(-movementSpeed)) {
+            // Move backward
+            if (ValidMove(-movementSpeed)) {
                 hero.move(-movementSpeed);
             }
             else {
@@ -273,7 +267,7 @@ window.onkeydown = function (event) {
             break;
         case 'W':
             // Move forward
-        if (ValidMove(movementSpeed)) {
+            if (ValidMove(movementSpeed)) {
                 hero.move(movementSpeed);
             }
             else {
