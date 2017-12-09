@@ -60,6 +60,7 @@ Villain.prototype = Object.create(GameObject.prototype);
 
 
 Villain.prototype.init = function() {
+    gl.enable(gl.DEPTH_TEST);
 
     this.vBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, this.vBuffer );
@@ -150,9 +151,9 @@ Villain.prototype.show = function() {
     gl.bindBuffer( gl.ELEMENT_ARRAY_BUFFER, this.iBuffer );
 
     //    var ambientProduct = mult(vec4(1.0,1.0,1.0,1.0), red);
-    var ambientProduct = mult(la1, lightBlue);
-    var diffuseProduct = mult(ld1, lightBlue);
-    var specularProduct = mult(ls1, lightBlue);
+    var ambientProduct = mult(la1, red);
+    var diffuseProduct = mult(ld1, red);
+    var specularProduct = mult(ls1, red);
 
     gl.uniform4fv(gl.getUniformLocation(program, "ambientProduct"),
         flatten(ambientProduct));

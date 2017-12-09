@@ -137,7 +137,7 @@ function Arena () {
 	    gl.drawArrays(gl.TRIANGLE_FAN, 8, 4);
 	    gl.drawArrays(gl.TRIANGLE_FAN, 12, 4);
 
-	    ambientProduct = mult(la0, black); // floor color
+	    ambientProduct = mult(la0, gray); // floor color
 	    diffuseProduct = mult(ld0, red);
 	    specularProduct = mult(ls0, red);
 	

@@ -24,7 +24,7 @@ var ld0 = [1.0, 1.0, 1.0, 1.0]; // light 0 diffuse intensity
 var ls0 = [1.0, 1.0, 1.0, 1.0]; // light 0 specular 
 var lp0 = [0.0, 1.0, 1.0, 1.0]; // light 0 position -- will adjust to hero's viewpoint 
 
-var la1 = [0.2, 0.2, 0.2, 1.0]; // light 1 ambient intensity 
+var la1 = [0.4, 0.4, 0.4, 1.0]; // light 1 ambient intensity 
 var ld1 = [1.0, 1.0, 1.0, 1.0]; // light 1 diffuse intensity 
 var ls1 = [1.0, 1.0, 1.0, 1.0]; // light 1 specular 
 var lp1 = [0.0, 1.0, 1.0, 1.0]; // light 1 position -- will adjust to villain's location
@@ -36,10 +36,12 @@ var me = 75;             // shininess exponent
 
 const red = [1.0, 0.0, 0.0, 1.0]; // pure red 
 const blue = [0.0, 0.0, 1.0, 1.0]; // pure blue 
-const lightBlue = [0.0, 0.8, 1.0, 1.0]; // sky blue
-const green = [0.0, 1.0, 0.0, 1.0]; // pure blue 
+const lightBlue = [0.0, 0.8, 1.0, 1.0]; // light blue
+const green = [0.0, 1.0, 0.0, 1.0]; // pure green 
 const yellow = [1.0, 1.0, 0.0, 1.0]; // pure yellow
 const black = [0.0, 0.0, 0.0, 1.0]; // pure black
+const white = [1.0, 1.0, 1.0, 1.0]; // pure white
+const gray = [0.5, 0.5, 0.5, 1.0]; // pure gray
 
 var modelViewMatrix, projectionMatrix;
 var modelViewMatrixLoc, projectionMatrixLoc;
@@ -53,12 +55,10 @@ var torusObjectArray = [];
 var BankObject1;
 var BankObject2;
 var villain;
-var villain2;
 
 var heroStashScore = 0;
 var heroBankScore = 0;
-var villainStashScore = 0;
-var villainBankScore = 0;
+var villainScore = 0;
 
 var g_matrixStack = []; // Stack for storing a matrix
 
@@ -93,7 +93,6 @@ window.onload = function init() {
     // to switch it back to 0 for consistency with
     // those objects that use the default.
 
-
     arena = new Arena(program);
     arena.init();
 
@@ -102,8 +101,8 @@ window.onload = function init() {
     hero.init();
 
     //thingSeeking = new ThingSeeking(program, ARENASIZE/4.0, 0.0, -ARENASIZE/4.0, 0, 10.0);
-    thingSeeking = new ThingSeeking(program, 500, 0.0, -500, 0, 10.0);
-    thingSeeking.init();
+    //thingSeeking = new ThingSeeking(program, 500, 0.0, -500, 0, 10.0);
+    //thingSeeking.init();
 
     //TorusObjects
     for (var i = 200; i < 1000; i = i + 200) {
@@ -117,12 +116,13 @@ window.onload = function init() {
 
     //BankObjects
     BankObject1 = new BankObject(program, 500, 0.0, -500, 0, 10.0);
+    //BoxMap(BankObject1);
     BankObject1.init();
 
     BankObject2 = new BankObject(program, 500, 0.0, -500, 0, 10.0);
+    //BoxMap(BankObject2);
     BankObject2.init();
 
-    //villain = new Villain(program, (3*ARENASIZE)/4.0, 0.0, -ARENASIZE/4.0, 0, 10.0);
     villain = new Villain(program, 500, 0.0, -30, 270, 10.0);
     villain.init();
 
@@ -188,31 +188,26 @@ checkForScore = function () {
         if (Math.abs(hero.x - torusObjectArray[i].x) < 20 && Math.abs(hero.z - torusObjectArray[i].z) < 20) {
             heroStashScore++;
             torusObjectArray[i].scaleVar = 0;
-            document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainBankScore;
+            document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainScore;
         }
     }
 };
 
-
 /*
-
 if (hero.xyz == BankObject.xyz) {
     heroBankScore = heroStashScore;
     heroStashScore = 0;
-    
-    if (heroBankScore >= 8) {
+    document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainBankScore;
+    if (heroBankScore >= 10) {
         document.getElementById('score').innerHTML = "THE HERO WINS!";
     }
 } else if (villain.xyz == hero.xyz) {
+    villainScore = heroStashScore;
     heroStashScore = 0;
 }
 
-RemoveTorus = function (position) { // needs to be implemented to remove a torus once picked up
-    position
-}
-
 Seek = function () { // needs to be implemented for the villain to actively do something
-
+    
 }
 
 BoxMap = function(Object) { // needs to be implemented to box map all torus' and the BankObject
