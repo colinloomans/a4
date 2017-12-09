@@ -48,6 +48,8 @@ var arena;
 var hero;
 var thingSeeking;
 var torusObjectArray = [];
+var bankObject1;
+var bankObject2;
 var villain;
 var villain2;
 
@@ -101,6 +103,13 @@ window.onload = function init(){
     thingSeeking = new ThingSeeking(program, 500, 0.0, -500, 0, 10.0);
     thingSeeking.init();
 
+    //bank objects
+    bankObject1 = new BankObject(program, 500, 0, 0, 10.0);
+    bankObject1.init();
+
+    bankObject2 = new BankObject(program, 0, 0, -500, 0, 10.0);
+    bankObject2.init();
+
     //TorusObjects
 
     for (var i = 200; i < 1000; i= i + 200) {
@@ -143,6 +152,8 @@ function render()
     arena.show();
     hero.show();
     thingSeeking.show();
+    bankObject1.show();
+    bankObject2.show();
     for (var i = 0; i < torusObjectArray.length; i++) {
         torusObjectArray[i].show();
     }
@@ -165,6 +176,8 @@ function render()
         torusObjectArray[i].show();
     }
     villain.show();
+    bankObject1.show();
+    bankObject2.show();
 
     requestAnimFrame( render );
 };
