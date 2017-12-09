@@ -19,7 +19,8 @@ function TorusObject(program, x, y, z, degrees, bounding_cir_rad)  {
 
 TorusObject.prototype = Object.create(GameObject.prototype);
 
-TorusObject.prototype.init = function() {
+TorusObject.prototype.init = function () {
+    gl.enable(gl.DEPTH_TEST);
     this.vBuffer = gl.createBuffer();
     gl.bindBuffer( gl.ARRAY_BUFFER, this.vBuffer );
     gl.bufferData( gl.ARRAY_BUFFER, new Float32Array(this.torusObjectVertices), gl.STATIC_DRAW );
@@ -35,6 +36,7 @@ TorusObject.prototype.init = function() {
 };
 
 TorusObject.prototype.show = function() {
+    
 
     g_matrixStack.push(modelViewMatrix);
     modelViewMatrix = mult(modelViewMatrix, translate(this.x, 0.0, this.z));
