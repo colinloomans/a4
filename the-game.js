@@ -178,21 +178,28 @@ function render() {
     BankObject1.show();
     BankObject2.show();
 
+    checkForScore();
+
     requestAnimFrame(render);
+};
+
+checkForScore = function () {
+    for (var i = 0; i < torusObjectArray.length; i++) {
+        if (Math.abs(hero.x - torusObjectArray[i].x) < 20 && Math.abs(hero.z - torusObjectArray[i].z) < 20) {
+            heroStashScore++;
+            torusObjectArray[i].scaleVar = 0;
+            document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainBankScore;
+        }
+    }
 };
 
 
 /*
-for (var i = 0; i < TorusObjectArray.length; i++) {
-    if (hero.xyz == TorusObjectArray[i].xyz) {
-        heroStashScore++;
-        RemoveTorus(TorusObject.xyz);
-    }
-}
+
 if (hero.xyz == BankObject.xyz) {
     heroBankScore = heroStashScore;
     heroStashScore = 0;
-    document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainBankScore;
+    
     if (heroBankScore >= 8) {
         document.getElementById('score').innerHTML = "THE HERO WINS!";
     }
@@ -205,13 +212,7 @@ RemoveTorus = function (position) { // needs to be implemented to remove a torus
 }
 
 Seek = function () { // needs to be implemented for the villain to actively do something
-    // get nearest torus position and move to it
-    if(villainStashScore >= 2) {
-        // move to the BankObject
-    }
-    if(villainStashScore + villainBankScore >= 8) {
-        // move to the BankObject
-    }
+
 }
 
 BoxMap = function(Object) { // needs to be implemented to box map all torus' and the BankObject

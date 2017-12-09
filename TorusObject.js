@@ -15,6 +15,7 @@ function TorusObject(program, x, y, z, degrees, bounding_cir_rad)  {
     this.iBuffer = null;
     this.vPosition = null;
     this.vNormal = null;
+    this.scaleVar = 10;
 };
 
 TorusObject.prototype = Object.create(GameObject.prototype);
@@ -40,7 +41,7 @@ TorusObject.prototype.show = function() {
 
     g_matrixStack.push(modelViewMatrix);
     modelViewMatrix = mult(modelViewMatrix, translate(this.x, 0.0, this.z));
-    modelViewMatrix = mult(modelViewMatrix, scalem(10, 10, 10));
+    modelViewMatrix = mult(modelViewMatrix, scalem(this.scaleVar, this.scaleVar, this.scaleVar));
     modelViewMatrix = mult(modelViewMatrix, rotateX(90));
 
     gl.bindBuffer( gl.ARRAY_BUFFER, this.vBuffer );
