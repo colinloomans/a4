@@ -97,8 +97,11 @@ window.onload = function init() {
     arena.init();
 
     //hero = new Hero(program, eyex, 0.0, eyez, 45, 10.0);
-    hero = new Hero(program, 500, 0.0, -970, 90, 10.0);
+    hero = new Hero(program, 50, 0.0, -50, 315, 10.0);
     hero.init();
+
+    villain = new Villain(program, 950, 0.0, -950, 135, 10.0);
+    villain.init();
 
     //thingSeeking = new ThingSeeking(program, ARENASIZE/4.0, 0.0, -ARENASIZE/4.0, 0, 10.0);
     //thingSeeking = new ThingSeeking(program, 500, 0.0, -500, 0, 10.0);
@@ -115,16 +118,13 @@ window.onload = function init() {
     }
 
     //BankObjects
-    BankObject1 = new BankObject(program, 500, 0.0, -500, 0, 10.0);
+    BankObject1 = new BankObject(program, 950, 0.0, -50, 0, 10.0);
     //BoxMap(BankObject1);
     BankObject1.init();
 
-    BankObject2 = new BankObject(program, 500, 0.0, -500, 0, 10.0);
+    BankObject2 = new BankObject(program, 50, 0.0, -950, 0, 10.0);
     //BoxMap(BankObject2);
     BankObject2.init();
-
-    villain = new Villain(program, 500, 0.0, -30, 270, 10.0);
-    villain.init();
 
     render();
 };

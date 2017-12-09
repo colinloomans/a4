@@ -42,6 +42,8 @@ BankObject.prototype.show = function() {
     modelViewMatrix = mult(modelViewMatrix, translate(this.x, 0.0, this.z));
     modelViewMatrix = mult(modelViewMatrix, scalem(20, 20, 20));
     modelViewMatrix = mult(modelViewMatrix, translate(0, 0.5, 0));
+    modelViewMatrix = mult(modelViewMatrix, rotateY(315));
+    modelViewMatrix = mult(modelViewMatrix, rotateZ(45));
 
     gl.bindBuffer( gl.ARRAY_BUFFER, this.vBuffer );
     this.vPosition = gl.getAttribLocation( program, "vPosition" );
