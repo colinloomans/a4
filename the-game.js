@@ -152,7 +152,6 @@ function render() {
     arena.show();
     hero.show();
     villain.show();
-    //thingSeeking.show();
     for (var i = 0; i < torusObjectArray.length; i++) {
         torusObjectArray[i].show();
     }
@@ -169,7 +168,6 @@ function render() {
     arena.show();
     hero.show();
     villain.show();
-    //thingSeeking.show();
     for (var i = 0; i < torusObjectArray.length; i++) {
         torusObjectArray[i].show();
     }
@@ -180,60 +178,6 @@ function render() {
     Seek();
     requestAnimFrame(render);
 };
-
-checkForScore = function () {
-    for (var i = 0; i < torusObjectArray.length; i++) {
-        if (Math.abs(hero.x - torusObjectArray[i].x) < 20 && Math.abs(hero.z - torusObjectArray[i].z) < 20) {
-            heroStashScore++;
-            document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainScore;
-            torusObjectArray.splice(i, 1);
-        }
-    }
-
-    if ((Math.abs(hero.x - BankObject1.x) < 10 && Math.abs(hero.z - BankObject1.z) < 10) || (Math.abs(hero.x - BankObject2.x) < 10 && Math.abs(hero.z - BankObject2.z) < 10)) {
-        if (heroBankScore >= 10) {
-            document.getElementById('score').innerHTML = "THE HERO WINS!";
-        }
-        else {
-            heroBankScore = heroStashScore + heroBankScore;
-            heroStashScore = 0;
-            document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainScore;
-        }
-    }
-};
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-Seek = function () { // needs to be implemented for the villain to actively do something
-    var movementSpeed = 2;
-    if (Math.abs(hero.x - villain.x) < 34 && Math.abs(hero.z - villain.z) < 34) {
-        if (villainScore >= 7) {
-            document.getElementById('score').innerHTML = "THE Villian wins wa wa waaaaaa!";
-        }
-        else {
-            villainScore = heroStashScore + villainScore;
-            heroStashScore = 0;
-            document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainScore;
-        }
-    }
-    else {
-        if (hero.x > villain.x) {
-            villain.x = villain.x + movementSpeed;
-        }
-        else {
-            villain.x = villain.x - movementSpeed;
-        }
-        if (hero.z > villain.z) {
-            villain.z = villain.z + movementSpeed;
-        }
-        else {
-            villain.z = villain.z - movementSpeed;
-        }
-    }
-    
-}
 
 //y goes 0-70, x = 0-1000 wall is about 30, z = 0 - (-1000)
 ValidMove = function (movement) {
@@ -268,6 +212,7 @@ ForceValidLocation = function () {
         hero.z = hero.z - 2;
     }
     while (Math.abs(hero.x - villain.x) < 32 && Math.abs(hero.z - villain.z) < 32) {
+        console.log("FUCK MY LIFE");
         if (hero.x < villain.x) {
             hero.x = hero.x - 1;
         }
@@ -283,35 +228,89 @@ ForceValidLocation = function () {
     }
 };
 
-    var keyMap = [];
-    document.addEventListener("keydown", onDocumentKeyDown, true);
-    document.addEventListener("keyup", onDocumentKeyUp, true);
+Seek = function () { // needs to be implemented for the villain to actively do something
+    var movementSpeed = 2;
+    if (Math.abs(hero.x - villain.x) < 37 && Math.abs(hero.z - villain.z) < 37) {
+        if (villainScore >= 7) {
+            document.getElementById('score').innerHTML = "THE Villian wins wa wa waaaaaa!";
+        }
+        else {
+            villainScore = heroStashScore + villainScore;
+            heroStashScore = 0;
+            document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainScore;
+        }
+    }
+    else {
+        if (hero.x > villain.x) {
+            villain.x = villain.x + movementSpeed;
+        }
+        else {
+            villain.x = villain.x - movementSpeed;
+        }
+        if (hero.z > villain.z) {
+            villain.z = villain.z + movementSpeed;
+        }
+        else {
+            villain.z = villain.z - movementSpeed;
+        }
+    }
 
-    function onDocumentKeyDown(event) {
-        var keyCode = event.keyCode;
-        keyMap[keyCode] = true;
-        executeMovement();
+};
+
+
+checkForScore = function () {
+    for (var i = 0; i < torusObjectArray.length; i++) {
+        if (Math.abs(hero.x - torusObjectArray[i].x) < 20 && Math.abs(hero.z - torusObjectArray[i].z) < 20) {
+            heroStashScore++;
+            document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainScore;
+            torusObjectArray.splice(i, 1);
+        }
     }
-    function onDocumentKeyUp(event) {
-        var keyCode = event.keyCode;
-        keyMap[keyCode] = false;
-        executeMovement();
+
+    if ((Math.abs(hero.x - BankObject1.x) < 10 && Math.abs(hero.z - BankObject1.z) < 10) || (Math.abs(hero.x - BankObject2.x) < 10 && Math.abs(hero.z - BankObject2.z) < 10)) {
+        if (heroBankScore >= 10) {
+            document.getElementById('score').innerHTML = "THE HERO WINS!";
+        }
+        else {
+            heroBankScore = heroStashScore + heroBankScore;
+            heroStashScore = 0;
+            document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainScore;
+        }
     }
-    function executeMovement() {
-        if (keyMap[37] == true) {
-            //rotate left
-            hero.turn(-3);
-        }
-        if (keyMap[39] == true) {
-            //rotate right
-            hero.turn(3);
-        }
-        if (keyMap[38] == true) {
-            //move front
-            hero.move(4.0);
-        }
-        if (keyMap[40] == true) {
-            //move back
-            hero.move(-3.0);
-        }
+};
+
+window.onkeydown = function (event) {
+    var key = String.fromCharCode(event.keyCode);
+    var movementSpeed = 3;
+    // For letters, the upper-case version of the letter is always
+    // returned because the shift-key is regarded as a separate key in
+    // itself.  Hence upper- and lower-case can't be distinguished.
+    switch (key) {
+        case 'S':
+            // Move backward
+            if (ValidMove(-movementSpeed)) {
+                hero.move(-movementSpeed);
+            }
+            else {
+                hero.move(movementSpeed);
+            }
+            break;
+        case 'W':
+            // Move forward
+            if (ValidMove(movementSpeed)) {
+                hero.move(movementSpeed);
+            }
+            else {
+                hero.move(-movementSpeed);
+            }
+            break;
+        case 'D':
+            // Turn left
+            hero.turn(movementSpeed);
+            break;
+        case 'A':
+            // Turn right
+            hero.turn(-movementSpeed);
+            break;
+    }
 };
