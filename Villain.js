@@ -44,7 +44,6 @@ function Villain(program, x, y, z, degrees, bounding_cir_rad)  {
     ];
     
     // Tex coords
-
     this.texCoord = [
 	1,1, 0,1, 0,0, 1,0,
 	0,1, 0,0, 1,0, 1,1,

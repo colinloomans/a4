@@ -72,7 +72,7 @@ window.onload = function init() {
 
     //  Configure WebGL
 
-    gl.clearColor(0.0, 0.86, 1.0, 1.0);           // sky color
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);           // sky color
 
     //  Load shaders and initialize attribute buffers
 
@@ -212,7 +212,6 @@ ForceValidLocation = function () {
         hero.z = hero.z - 2;
     }
     while (Math.abs(hero.x - villain.x) < 30 && Math.abs(hero.z - villain.z) < 30) {
-        console.log("FUCK MY LIFE");
         if (hero.x < villain.x) {
             hero.x = hero.x - 1;
         }
@@ -228,11 +227,11 @@ ForceValidLocation = function () {
     }
 };
 
-Seek = function () { // needs to be implemented for the villain to actively do something
+Seek = function () {
     var movementSpeed = 2;
     if (Math.abs(hero.x - villain.x) < 37 && Math.abs(hero.z - villain.z) < 37) {
         if (villainScore >= 7) {
-            document.getElementById('score').innerHTML = "THE Villian wins wa wa waaaaaa!";
+            document.getElementById('score').innerHTML = "THE VILLAIN WINS! Refresh the page for a new game.";
         }
         else {
             villainScore = heroStashScore + villainScore;
@@ -256,7 +255,6 @@ Seek = function () { // needs to be implemented for the villain to actively do s
             villain.z = villain.z - movementSpeed;
         }
     }
-
 };
 
 
@@ -271,7 +269,7 @@ checkForScore = function () {
 
     if ((Math.abs(hero.x - BankObject1.x) < 10 && Math.abs(hero.z - BankObject1.z) < 10) || (Math.abs(hero.x - BankObject2.x) < 10 && Math.abs(hero.z - BankObject2.z) < 10)) {
         if (heroBankScore >= 10) {
-            document.getElementById('score').innerHTML = "THE HERO WINS!";
+            document.getElementById('score').innerHTML = "THE HERO WINS! Refresh the page for a new game.";
         }
         else {
             heroBankScore = heroStashScore + heroBankScore;
