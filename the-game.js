@@ -211,7 +211,7 @@ ForceValidLocation = function () {
     while (hero.z > -25) {
         hero.z = hero.z - 2;
     }
-    while (Math.abs(hero.x - villain.x) < 32 && Math.abs(hero.z - villain.z) < 32) {
+    while (Math.abs(hero.x - villain.x) < 30 && Math.abs(hero.z - villain.z) < 30) {
         console.log("FUCK MY LIFE");
         if (hero.x < villain.x) {
             hero.x = hero.x - 1;
@@ -237,6 +237,8 @@ Seek = function () { // needs to be implemented for the villain to actively do s
         else {
             villainScore = heroStashScore + villainScore;
             heroStashScore = 0;
+            villain.x = 950;
+            villain.z = -950;
             document.getElementById('score').innerHTML = "SCORE: HERO = " + heroBankScore + " VILLAIN = " + villainScore;
         }
     }
@@ -306,11 +308,11 @@ window.onkeydown = function (event) {
             break;
         case 'D':
             // Turn left
-            hero.turn(movementSpeed);
+            hero.turn(movementSpeed * 2);
             break;
         case 'A':
             // Turn right
-            hero.turn(-movementSpeed);
+            hero.turn(-movementSpeed * 2);
             break;
     }
 };
